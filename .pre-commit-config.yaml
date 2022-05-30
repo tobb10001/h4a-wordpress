@@ -1,0 +1,42 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+ci:
+    autoupdate_schedule: weekly
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-json
+    -   id: check-xml
+    -   id: check-yaml
+    -   id: check-added-large-files
+    -   id: check-case-conflict
+    -   id: check-merge-conflict
+    -   id: end-of-file-fixer
+-   repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.31.1
+    hooks:
+    -   id: markdownlint-fix
+-   repo: https://github.com/digitalpulp/pre-commit-php.git
+    rev: 1.4.0
+    hooks:
+    -   id: php-lint
+    -   id: php-lint-all
+        args: [-s first]
+    -   id: php-unit
+    -   id: php-stan
+        exclude: tests
+    -   id: php-cs
+        files: \.php$
+        args: [--standard=PSR2 -p]
+    -   id: php-cbf
+        files: \.php$
+        args: [--standard=PSR2 -p]
+    -   id: php-cs-fixer
+        files: \.php$
+-   repo: https://gitlab.com/daverona/pre-commit/php
+    rev: 0.6.0
+    hooks:
+    -   id: phpmd

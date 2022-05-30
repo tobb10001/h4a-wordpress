@@ -1,0 +1,8 @@
+/vendor/
+.idea/
+.phpunit.cache
+.php-cs-fixer.cache
+phpstan.neon
+
+# Have a space to do whatever you want.
+/misc
