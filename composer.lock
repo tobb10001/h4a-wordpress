@@ -4,8 +4,57 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48ba70c9eef949444f7e54dae8f433f9",
-    "packages": [],
+    "content-hash": "0c202df28db5fee1d64cc1cac9fe923e",
+    "packages": [
+        {
+            "name": "tobb10001/h4a-integration",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tobb10001/h4a-integration.git",
+                "reference": "482588a6ba1b7f42df4930ba18e632096b68d298"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tobb10001/h4a-integration/zipball/482588a6ba1b7f42df4930ba18e632096b68d298",
+                "reference": "482588a6ba1b7f42df4930ba18e632096b68d298",
+                "shasum": ""
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.6",
+                "phpmd/phpmd": "*",
+                "phpstan/phpstan": "^1.4",
+                "phpunit/phpunit": "^9",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tobb10001\\H4aIntegration\\": "src/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit"
+                ]
+            },
+            "license": [
+                "LGPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Fischer",
+                    "email": "tobb10001@gmail.com"
+                }
+            ],
+            "description": "Interface for gathering data from handball4all.de, as well as displaying it.",
+            "support": {
+                "source": "https://github.com/tobb10001/h4a-integration/tree/v0.1.0",
+                "issues": "https://github.com/tobb10001/h4a-integration/issues"
+            },
+            "time": "2022-05-30T22:57:05+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "composer/pcre",

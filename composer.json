@@ -17,6 +17,15 @@
     "scripts": {
         "test": "vendor/bin/phpunit"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/tobb10001/h4a-integration"
+        }
+    ],
+    "require": {
+        "tobb10001/h4a-integration": "v0.1.0"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9",
         "phpstan/phpstan": "^1.4",
