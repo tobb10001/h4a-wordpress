@@ -1,4 +1,5 @@
 parameters:
     level: 8
     paths:
+        - ./h4a-wordpress.php
         - src
