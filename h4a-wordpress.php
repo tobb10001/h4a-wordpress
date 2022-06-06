@@ -8,3 +8,9 @@
  * Licence: LGPL-3.0-only
  * Licence URI: https://www.gnu.org/licenses/lgpl-3.0.html.en
  */
+
+require "vendor/autoload.php";
+
+use Tobb10001\H4aWordpress\Plugin;
+
+(new Plugin())->run();
