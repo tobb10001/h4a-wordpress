@@ -24,7 +24,7 @@
         }
     ],
     "require": {
-        "tobb10001/h4a-integration": "v0.1.0"
+        "tobb10001/h4a-integration": "0.*"
     },
     "require-dev": {
         "php-stubs/wordpress-stubs": "*",
