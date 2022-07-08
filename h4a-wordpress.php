@@ -13,4 +13,4 @@ require "vendor/autoload.php";
 
 use Tobb10001\H4aWordpress\Plugin;
 
-(new Plugin())->run();
+(new Plugin(__FILE__))->run();

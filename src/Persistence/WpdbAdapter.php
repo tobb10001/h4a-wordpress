@@ -50,10 +50,10 @@ class WpdbAdapter implements PersistenceInterface
         return <<<SQL
 			CREATE TABLE IF NOT EXISTS {$this->wpdb->prefix}teams (
 				id INTEGER PRIMARY KEY AUTO_INCREMENT,
-				internalName VARCHAR NOT NULL,
-				identificators VARCHAR NOT NULL,
-				leagueUrl VARCHAR NULL,
-				cupUrl VARCHAR NULL
+				internalName VARCHAR(255) NOT NULL,
+				identificators VARCHAR(255) NOT NULL,
+				leagueUrl VARCHAR(255) NULL,
+				cupUrl VARCHAR(255) NULL
 			);
 SQL;
     }
@@ -74,17 +74,17 @@ SQL;
         return <<<SQL
 			CREATE TABLE IF NOT EXISTS {$this->wpdb->prefix}leaguemetadata (
 				teamid INTEGER NOT NULL,
-				id INTEGER PRIMARY KEY AUTOINCREMENT,
-				name VARCHAR NOT NULL,
-				sname VARCHAR NOT NULL,
-				headline1 VARCHAR NOT NULL,
-				headline2 VARCHAR NOT NULL,
-				actualized VARCHAR NOT NULL,
-				repUrl VARCHAR NOT NULL,
-				scoreShownPerGame NOT NULL,
-				CONSTRAINT fk_team
-					FOREIGN KEY (teamid) REFERENCES {$this->wpdb->prefix}team(id)
-					ON UPDATE CASCADE ON DELETE CASCADE
+				id INTEGER PRIMARY KEY AUTO_INCREMENT,
+				name VARCHAR(255) NOT NULL,
+				sname VARCHAR(255) NOT NULL,
+				headline1 VARCHAR(255) NOT NULL,
+				headline2 VARCHAR(255) NOT NULL,
+				actualized VARCHAR(255) NOT NULL,
+				repUrl VARCHAR(255) NOT NULL,
+                scoreShownPerGame BOOLEAN NOT NULL,
+				CONSTRAINT fk_leaguemetadata_team
+					FOREIGN KEY (teamid) REFERENCES {$this->wpdb->prefix}teams(id)
+					ON DELETE CASCADE ON UPDATE CASCADE
 			);
 SQL;
     }
@@ -106,35 +106,35 @@ SQL;
 			CREATE TABLE IF NOT EXISTS {$this->wpdb->prefix}games (
 				metadataid INTEGER NOT NULL,
 				id INTEGER PRIMARY KEY AUTO_INCREMENT,
-				gID VARCHAR NOT NULL,
-				sGID VARCHAR NULL DEFAULT NULL,
-				gNo VARCHAR NOT NULL,
+				gID VARCHAR(255) NOT NULL,
+				sGID VARCHAR(255) NULL DEFAULT NULL,
+				gNo VARCHAR(255) NOT NULL,
 				live BOOLEAN NOT NULL,
-				gToken VARCHAR NULL DEFAULT NULL,
-				gAppid VARCHAR NOT NULL,
-				gDate VARCHAR NOT NULL,
-				gWDay VARCHAR NOT NULL,
-				gTime VARCHAR NOT NULL,
-				gGymnasiumID VARCHAR NOT NULL,
-				gGymnasiumNo VARCHAR NOT NULL,
-				gGymnasiumName VARCHAR NOT NULL,
-				gGymnasiumPostal VARCHAR NOT NULL,
-				gGymnasiumTown VARCHAR NOT NULL,
-				gGymnasiumStreet VARCHAR NOT NULL,
-				gHomeTeam VARCHAR NOT NULL,
-				gGuestTeam VARCHAR NOT NULL,
+				gToken VARCHAR(255) NULL DEFAULT NULL,
+				gAppid VARCHAR(255) NOT NULL,
+				gDate VARCHAR(255) NOT NULL,
+				gWDay VARCHAR(255) NOT NULL,
+				gTime VARCHAR(255) NOT NULL,
+				gGymnasiumID VARCHAR(255) NOT NULL,
+				gGymnasiumNo VARCHAR(255) NOT NULL,
+				gGymnasiumName VARCHAR(255) NOT NULL,
+				gGymnasiumPostal VARCHAR(255) NOT NULL,
+				gGymnasiumTown VARCHAR(255) NOT NULL,
+				gGymnasiumStreet VARCHAR(255) NOT NULL,
+				gHomeTeam VARCHAR(255) NOT NULL,
+				gGuestTeam VARCHAR(255) NOT NULL,
 				gHomeGoals INT NULL DEFAULT NULL,
 				gGuestGoals INT NULL DEFAULT NULL,
 				gHomeGoals_1 INT NULL DEFAULT NULL,
 				gGuestGoals_1 INT NULL DEFAULT NULL,
 				gHomePoints INT NULL DEFAULT NULL,
 				gGuestPoints INT NULL DEFAULT NULL,
-				gComment VARCHAR NOT NULL,
-				gGroupsortTxt VARCHAR NOT NULL,
-				gReferee VARCHAR NOT NULL,
-				robotextstate VARCHAR NOT NULL,
-				CONSTRAINT fk_metadata
-					FOREIGN KEY (metadataid) REFERENCES {$this->wpdb->prefix}metadata(id)
+				gComment VARCHAR(255) NOT NULL,
+				gGroupsortTxt VARCHAR(255) NOT NULL,
+				gReferee VARCHAR(255) NOT NULL,
+				robotextstate VARCHAR(255) NOT NULL,
+				CONSTRAINT fk_games_leaguemetadata
+					FOREIGN KEY (metadataid) REFERENCES {$this->wpdb->prefix}leaguemetadata(id)
 					ON UPDATE CASCADE ON DELETE CASCADE
 			);
 SQL;
@@ -156,10 +156,10 @@ SQL;
         return <<<SQL
 			CREATE TABLE IF NOT EXISTS {$this->wpdb->prefix}tabscores (
 				metadataid INTEGER NOT NULL,
-                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 				tabScore INT NOT NULL,
-				tabTeamID VARCHAR NOT NULL,
-				tabTeamname VARCHAR NOT NULL,
+				tabTeamID VARCHAR(255) NOT NULL,
+				tabTeamname VARCHAR(255) NOT NULL,
 				liveTeam BOOLEAN NOT NULL,
 				numPlayedGames INT NOT NULL,
 				numWonGames INT NOT NULL,
@@ -169,12 +169,12 @@ SQL;
 				numGoalsGot INT NOT NULL,
 				pointsPlus INT NOT NULL,
 				pointsMinus INT NOT NULL,
-				pointsPerGame10 VARCHAR NOT NULL,
-				numGoalsDiffperGame VARCHAR NOT NULL,
-				numGoalsShotperGame VARCHAR NOT NULL,
-				posCriterion VARCHAR NOT NULL,
-				CONSTRAINT fk_metadata
-					FOREIGN KEY (metadataid) REFERENCES {$this->wpdb->prefix}metadata(id)
+				pointsPerGame10 VARCHAR(255) NOT NULL,
+				numGoalsDiffperGame VARCHAR(255) NOT NULL,
+				numGoalsShotperGame VARCHAR(255) NOT NULL,
+				posCriterion VARCHAR(255) NOT NULL,
+				CONSTRAINT fk_tabscore_metadata
+					FOREIGN KEY (metadataid) REFERENCES {$this->wpdb->prefix}leaguemetadata(id)
 					ON UPDATE CASCADE ON DELETE CASCADE
 			);
 SQL;
@@ -195,7 +195,6 @@ SQL;
     {
         $result = true;
 
-        $this->wpdb->query("START TRANSACTION;");
         // chained konjunction
         // if one of the exec()-calls (table creations) fail, the others won't be attempted
         $result = $this->createTableTeams()
@@ -203,7 +202,29 @@ SQL;
         && $this->createTableGames()
         && $this->createTableTabScores();
 
-        $this->wpdb->query($result ? "COMMIT;" : "ROLLBACK;");
+        return $result;
+    }
+
+    /**
+     * Drop the database tables. Useful for uninstallation.
+     */
+    public function dropTables(): bool
+    {
+        $result = true;
+        $tables = [
+            "teams",
+            "leaguemetadata",
+            "games",
+            "tabscores",
+        ];
+
+        foreach ($tables as $table) {
+            // if one fails, the others will still be attempted, but the result
+            // stays false
+            $result = $this->wpdb->query(
+                "DROP TABLE IF EXISTS {$this->wpdb->prefix}{$table}"
+            ) && $result;
+        }
 
         return $result;
     }
