@@ -29,9 +29,6 @@ repos:
     -   id: php-lint-all
         args: [-s first]
     -   id: php-unit
-    -   id: php-cs
-        files: \.php$
-        args: [--standard=PSR2 -p]
     -   id: php-cbf
         files: \.php$
         args: [--standard=PSR2 -p]
