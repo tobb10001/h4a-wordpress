@@ -29,8 +29,6 @@ repos:
     -   id: php-lint-all
         args: [-s first]
     -   id: php-unit
-    -   id: php-stan
-        exclude: tests
     -   id: php-cs
         files: \.php$
         args: [--standard=PSR2 -p]
