@@ -6,15 +6,16 @@ namespace Tobb10001\H4aWordpress;
 
 use Tobb10001\H4aIntegration\Models\Team;
 use Tobb10001\H4aWordpress\Persistence\WpdbAdapter;
+use Tobb10001\H4aWordpress\Util\WpNoticeManager;
+
 use function add_menu_page;
 
 class Plugin
 {
     private string $mainfile;
     private WpdbAdapter $wpdbAdapter;
-    private ?array $notice = null;
+    private WpNoticeManager $noticeManager;
 
-    public const COOKIE_NOTICE = 'h4ac_notice';
     public const MANAGE_CAPABILITY = 'manage_h4ac';
     public const NONCE_FIELD_NAME = '_h4ac_nonce';
     public const NONCE_EDIT_TEAMS = 'h4ac_nonce_edit_teams';
@@ -26,6 +27,7 @@ class Plugin
     {
         $this->mainfile = $mainfile;
         $this->wpdbAdapter = new WpdbAdapter();
+        $this->noticeManager = new WpNoticeManager();
     }
 
     /**
@@ -53,15 +55,7 @@ class Plugin
         add_action('admin_init', [$this, 'saveSettings']);
 
         // displaying notices
-        add_action('admin_init', function () {
-            if (!array_key_exists(self::COOKIE_NOTICE, $_COOKIE)) {
-                return;
-            }
-
-            $this->notice = json_decode(stripslashes($_COOKIE[self::COOKIE_NOTICE]));
-            setcookie(self::COOKIE_NOTICE, '', -1);
-        });
-        add_action('admin_notices', [$this, 'showNotice']);
+        $this->noticeManager->init();
     }
 
     /** region Activation / Deactivation */
@@ -139,50 +133,22 @@ class Plugin
             $this->postRedirectGet('error', 'Fehlende Berechtigung.');
         }
 
-        $severity = $notice = $dismissible = null;
-        $availableActions[$_POST['action']]($severity, $notice, $dismissible);
-        $this->postRedirectGet($severity, $notice, $dismissible);
+        $availableActions[$_POST['action']]();
+        $this->postRedirectGet();
     }
 
-    public function showNotice(): void
-    {
-        if (is_null($this->notice)) {
-            return;
-        }
-
-        list($severity, $notice, $dismissible) = $this->notice;
-
-        $dismissibleText = $dismissible ? 'is-dismissible' : ''; ?>
-            <div class="notice notice-<?= $severity ?> <?= $dismissibleText ?>">
-                <p><?= $notice ?></p>
-            </div>
-        <?php
-    }
 
     /**
-     * Preform a Post/Redirect/Get-Redirect to the current page, that optionally
-     * shows a notice on arrival.
+     * Preform a Post/Redirect/Get-Redirect to the current page.
      * @param ?string $severity Type of notice, one of ['warning', 'error', 'info', 'success']
      * @param ?string $notice Message to display to the user.
      * @param bool $dismissible Whether to make the notice dismissible or not.
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      * @SuppressWarnings(PHPMD.ExitExpression)
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public static function postRedirectGet(
-        ?string $severity = null,
-        ?string $notice = null,
-        ?bool $dismissible = true,
-    ) {
-        if (!is_null($notice)) {
-            $avaliableSeverities = ['warning', 'error', 'info', 'success'];
-            $daySeconds = 24 * 60 * 60;
-            $severity = in_array($severity, $avaliableSeverities) ? $severity : 'info';
-            $dismissible = $dismissible ?? true;
-            setcookie(self::COOKIE_NOTICE, json_encode([$severity, $notice, $dismissible]), time() + $daySeconds);
-        }
-
+    public static function postRedirectGet()
+    {
         wp_redirect(admin_url("admin.php?page=" . $_GET["page"]), 303);
         exit;
     }
@@ -192,7 +158,7 @@ class Plugin
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.UnusedPrivateMethods)
      */
-    private function saveTeam(&$severity, &$notice, &$dismissible)
+    private function saveTeam()
     {
         $tid = sanitize_text_field($_POST['id']);
         if ((int) $tid == -1) {
@@ -209,15 +175,16 @@ class Plugin
 
         $success = $this->wpdbAdapter->saveTeam($team);
 
-        list($severity, $notice, $dismissible) = $success ?
-            ['success', 'Team erfolgrecich gespeichert.', true] :
-            [
-                'error',
+        $success ?
+            $this->noticeManager->addNotice(
+                'Team erfolgrecich gespeichert.',
+                'success'
+            ) :
+            $this->noticeManager->addNotice(
                 'Fehler beim Speichern des Teams: '
                     . $this->wpdbAdapter->getLastError(),
-                true
-            ]
-        ;
+                'error',
+            );
     }
     /** endregion */
 }
