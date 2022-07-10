@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tobb10001\H4aWordpress\Persistence;
 
 use Tobb10001\H4aIntegration\Models\LeagueData;
+use Tobb10001\H4aIntegration\Models\Team;
 use Tobb10001\H4aIntegration\Persistence\PersistenceInterface;
 use wpdb;
 
@@ -29,7 +30,14 @@ class WpdbAdapter implements PersistenceInterface
      */
     public function getTeams(): array
     {
-        return []; // TODO
+        $raw = $this->wpdb->get_results(
+            "SELECT * FROM {$this->wpdb->prefix}h4ac_teams ORDER BY internalName ASC",
+            ARRAY_A
+        );
+
+        return array_map(function ($item) {
+            return new Team($item);
+        }, $raw);
     }
 
     /**
@@ -38,6 +46,37 @@ class WpdbAdapter implements PersistenceInterface
     public function replaceLeagueData(int $teamid, LeagueData $leagueData): bool
     {
         return false; // TODO
+    }
+    /** endregion */
+
+    /** region General Information */
+    public function getLastError(): string
+    {
+        return $this->wpdb->last_error;
+    }
+    /** endregion */
+
+    /** region Edit */
+    /**
+     * Saves $team to the database. If the team's ID is null, a new one is
+     * created.
+     * @param Team $team Team to save.
+     */
+    public function saveTeam(Team $team): bool
+    {
+        $table = $this->wpdb->prefix . 'h4ac_teams';
+        $teamArr = [
+            'internalName' => $team->internalName,
+            'identificators' => $team->identificatorStr(),
+            'leagueUrl' => $team->leagueUrl,
+            'cupUrl' => $team->cupUrl,
+        ];
+
+        return (bool) (
+            is_null($team->id) ?
+             $this->wpdb->insert($table, $teamArr) :
+             $this->wpdb->update($table, $teamArr, ['id' => $team->id])
+        );
     }
     /** endregion */
 
