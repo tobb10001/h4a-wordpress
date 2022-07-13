@@ -30,7 +30,8 @@ function h4ac_print_menupage(array $teams, string $nonceActionName, string $nonc
                     <th>Name (intern)</th>
                     <th>Identifikatoren</th>
                     <th>Link (Liga)</th>
-                    <!-- <th>Link (Pokal)</th> -->
+                    <th>Link (Pokal)</th>
+                    <th>Aktionen</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +41,14 @@ function h4ac_print_menupage(array $teams, string $nonceActionName, string $nonc
                         <td><?= $team->identificatorStr() ?></td>
                         <td><?= $team->leagueUrl ?></td>
                         <td><?= $team->cupUrl ?></td>
+                        <td>
+                            <form method="POST">
+                                <?php wp_nonce_field($nonceActionName, $nonceFieldName); ?>
+                                <input type="hidden" name="action" value="h4ac-delete-team" />
+                                <input type="hidden" name="id" value="<?= $team->id ?>" />
+                                <input type="submit" value="Löschen" class="button-secondary" />
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

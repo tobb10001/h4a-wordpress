@@ -55,7 +55,6 @@ class Settings
 
     /**
      * Display the plugin's menupage.
-     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     public function menupage(): void
     {
@@ -73,12 +72,12 @@ class Settings
      * Determines if there is data sent from the menupage and if so, triggers
      * the appropriate action to handle the data (i.e. save it for most if not
      * all cases).
-     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function saveSettings(): void
     {
         $availableActions = [
             'h4ac-edit-team' => [$this, 'saveTeam'],
+            'h4ac-delete-team' => [$this, 'deleteTeam'],
         ];
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST'
@@ -99,8 +98,6 @@ class Settings
     /**
      * Saves a team sent from the menupage to the database.
      * Creates a notice to communicate outcome to user.
-     * @SuppressWarnings(PHPMD.Superglobals)
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethods)
      */
     private function saveTeam()
     {
@@ -128,6 +125,23 @@ class Settings
                 'Fehler beim Speichern des Teams: '
                     . $this->wpdbAdapter->getLastError(),
                 'error',
+            );
+    }
+
+    private function deleteTeam()
+    {
+        $tid = (int) sanitize_text_field($_POST['id']);
+
+        $success = $this->wpdbAdapter->deleteTeam($tid);
+
+        $success ?
+            $this->noticeManager->addNotice(
+                'Team erfolgreich gelöscht.',
+                'success'
+            ) :
+            $this->noticeManager->addNotice(
+                'Fehler beim löschen des Teams.',
+                'error'
             );
     }
 }

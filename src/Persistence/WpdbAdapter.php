@@ -78,6 +78,11 @@ class WpdbAdapter implements PersistenceInterface
              $this->wpdb->update($table, $teamArr, ['id' => $team->id])
         );
     }
+
+    public function deleteTeam(int $tid): bool
+    {
+        return (bool) $this->wpdb->delete($this->wpdb->prefix . 'h4ac_teams', ['id' => $tid]);
+    }
     /** endregion */
 
     /** region table management */
