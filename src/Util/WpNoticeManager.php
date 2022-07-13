@@ -29,7 +29,6 @@ class WpNoticeManager
     /**
      * Register a notice to be displayed on the next request.
      * Uses a cookie, so can only be called BEFORE headers are sent.
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function addNotice(
         string $notice,
@@ -48,7 +47,6 @@ class WpNoticeManager
      * Checks if the current request contains a cookie that requires to display
      * a notice later.
      * Must be done before headers are sent, because it has to clear the cookie.
-     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function checkCookie(): void
     {

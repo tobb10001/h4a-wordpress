@@ -32,7 +32,6 @@ class Plugin
 
     /**
      * Initialize the plugin with the WordPress API.
-     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function run(): void
     {
@@ -84,7 +83,6 @@ class Plugin
 
     /**
      * Plugin uninstallation.
-     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     public static function uninstall(): void
     {
@@ -101,7 +99,6 @@ class Plugin
 
     /**
      * Display the plugin's menupage.
-     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     public function menupage(): void
     {
@@ -119,7 +116,6 @@ class Plugin
      * Determines if there is data sent from the menupage and if so, triggers
      * the appropriate action to handle the data (i.e. save it for most if not
      * all cases).
-     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function saveSettings(): void
     {
@@ -146,8 +142,6 @@ class Plugin
     /**
      * Saves a team sent from the menupage to the database.
      * Creates a notice to communicate outcome to user.
-     * @SuppressWarnings(PHPMD.Superglobals)
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethods)
      */
     private function saveTeam()
     {

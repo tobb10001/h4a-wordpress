@@ -11,7 +11,6 @@ use Tobb10001\H4aIntegration\Models\Team;
  * @param string $nonceActionName Name of the action for the nonce field.
  * @param string $nonceFieldName Name of the nonce field to be used.
  *
- * @SuppressWarnings(PHPMD.ElseExpression)
  */
 function h4ac_print_menupage(array $teams, string $nonceActionName, string $nonceFieldName)
 {

@@ -27,7 +27,6 @@ class WpHttpClient implements HttpClientInterface
     }
 
     /**
-     * @SuppressWarnings("boolean")
      */
     public function getJson(
         string $url,

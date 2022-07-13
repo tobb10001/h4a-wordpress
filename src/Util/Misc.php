@@ -10,8 +10,6 @@ abstract class Misc
     /**
      * Preform a Post/Redirect/Get-Redirect to the current page.
      *
-     * @SuppressWarnings(PHPMD.ExitExpression)
-     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public static function postRedirectGet()
     {
