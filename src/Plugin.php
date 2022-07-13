@@ -142,22 +142,6 @@ class Plugin
         $this->postRedirectGet();
     }
 
-
-    /**
-     * Preform a Post/Redirect/Get-Redirect to the current page.
-     * @param ?string $severity Type of notice, one of ['warning', 'error', 'info', 'success']
-     * @param ?string $notice Message to display to the user.
-     * @param bool $dismissible Whether to make the notice dismissible or not.
-     *
-     * @SuppressWarnings(PHPMD.ExitExpression)
-     * @SuppressWarnings(PHPMD.Superglobals)
-     */
-    public static function postRedirectGet()
-    {
-        wp_redirect(admin_url("admin.php?page=" . $_GET["page"]), 303);
-        exit;
-    }
-
     /** region Post Actions */
     /**
      * Saves a team sent from the menupage to the database.
