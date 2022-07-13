@@ -42,6 +42,14 @@ function h4ac_print_menupage(array $teams, string $nonceActionName, string $nonc
                         <td><?= $team->leagueUrl ?></td>
                         <td><?= $team->cupUrl ?></td>
                         <td>
+                            <button
+                                data-id="<?= $team->id ?>"
+                                data-internalName="<?= $team->internalName ?>"
+                                data-identificators="<?= $team->identificatorStr() ?>"
+                                data-leagueUrl="<?= $team->leagueUrl?>"
+                                data-cupUrl="<?= $team->cupUrl ?>"
+                                class="button-primary h4ac-edit-team"
+                            >Bearbeiten</button>
                             <form method="POST">
                                 <?php wp_nonce_field($nonceActionName, $nonceFieldName); ?>
                                 <input type="hidden" name="action" value="h4ac-delete-team" />
@@ -58,9 +66,11 @@ function h4ac_print_menupage(array $teams, string $nonceActionName, string $nonc
     <h3>Hinzufügen / Bearbeiten</h3>
 
     <!-- TODO: add functionality to this button -->
-    <button style="display: none;">Neues Team erstellen.</button>
+    <button style="display: none;" id='h4ac-new-team' class='button-primary'>
+        Neues Team erstellen.
+    </button>
 
-    <form method="POST">
+    <form method="POST" id="h4ac-team-form">
         <?php wp_nonce_field($nonceActionName, $nonceFieldName); ?>
         <input type="hidden" name="action" value="h4ac-edit-team">
         <input type="hidden" name="id" value="-1">

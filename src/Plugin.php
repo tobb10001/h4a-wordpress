@@ -24,7 +24,12 @@ class Plugin
         $this->mainfile = $mainfile;
         $this->wpdbAdapter = new WpdbAdapter();
         $this->noticeManager = new WpNoticeManager();
-        $this->settings = new Settings(self::MANAGE_CAPABILITY, $this->wpdbAdapter, $this->noticeManager);
+        $this->settings = new Settings(
+            self::MANAGE_CAPABILITY,
+            $this->wpdbAdapter,
+            $this->noticeManager,
+            $this->mainfile,
+        );
     }
 
     /**

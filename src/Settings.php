@@ -13,6 +13,7 @@ class Settings
 {
     private string $capability;
     private WpNoticeManager $noticeManager;
+    private string $pluginFile;
     private WpdbAdapter $wpdbAdapter;
 
     public const NONCE_FIELD_NAME = '_h4ac_nonce';
@@ -26,11 +27,13 @@ class Settings
     public function __construct(
         string $capability,
         WpdbAdapter $wpdbAdapter,
-        WpNoticeManager $noticeManager
+        WpNoticeManager $noticeManager,
+        string $pluginFile,
     ) {
         $this->capability = $capability;
         $this->wpdbAdapter = $wpdbAdapter;
         $this->noticeManager = $noticeManager;
+        $this->pluginFile = $pluginFile;
     }
 
     /**
@@ -46,6 +49,15 @@ class Settings
                 $this->capability,
                 'h4a-client',
                 [$this, 'menupage']
+            );
+        });
+        add_action('admin_enqueue_scripts', function () {
+            wp_enqueue_script(
+                'h4ac-admin-script',
+                plugin_dir_url($this->pluginFile) . 'src/static/admin.js',
+                [],
+                false,
+                true,
             );
         });
 
