@@ -13,7 +13,7 @@ use Tobb10001\H4aIntegration\Models\Team;
  *
  * @SuppressWarnings(PHPMD.ElseExpression)
  */
-function print_menupage(array $teams, string $nonceActionName, string $nonceFieldName)
+function h4ac_print_menupage(array $teams, string $nonceActionName, string $nonceFieldName)
 {
     ?>
     <div class='wrap'>

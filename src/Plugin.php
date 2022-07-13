@@ -111,8 +111,8 @@ class Plugin
 
         $teams = $this->wpdbAdapter->getTeams();
 
-        require_once __DIR__ . '/html/menupage.php';
-        print_menupage($teams, self::NONCE_EDIT_TEAMS, self::NONCE_FIELD_NAME);
+        require_once __DIR__ . '/templates/menupage.php';
+        h4ac_print_menupage($teams, self::NONCE_EDIT_TEAMS, self::NONCE_FIELD_NAME);
     }
 
     /**
