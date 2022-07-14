@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "tobb10001/h4a-integration",
-            "version": "v0.1.3",
+            "version": "v0.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tobb10001/h4a-integration.git",
-                "reference": "88ea5d867bc4fc4be1dc2bb76a02eda93c7e9d2c"
+                "reference": "c824526e0fc72ae8bd762ca1cabbb1429d0f8ddf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tobb10001/h4a-integration/zipball/88ea5d867bc4fc4be1dc2bb76a02eda93c7e9d2c",
-                "reference": "88ea5d867bc4fc4be1dc2bb76a02eda93c7e9d2c",
+                "url": "https://api.github.com/repos/tobb10001/h4a-integration/zipball/c824526e0fc72ae8bd762ca1cabbb1429d0f8ddf",
+                "reference": "c824526e0fc72ae8bd762ca1cabbb1429d0f8ddf",
                 "shasum": ""
             },
             "require-dev": {
@@ -49,10 +49,10 @@
             ],
             "description": "Interface for gathering data from handball4all.de, as well as displaying it.",
             "support": {
-                "source": "https://github.com/tobb10001/h4a-integration/tree/v0.1.3",
+                "source": "https://github.com/tobb10001/h4a-integration/tree/v0.1.4",
                 "issues": "https://github.com/tobb10001/h4a-integration/issues"
             },
-            "time": "2022-07-09T22:36:07+00:00"
+            "time": "2022-07-14T14:03:12+00:00"
         }
     ],
     "packages-dev": [
