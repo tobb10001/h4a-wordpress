@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tobb10001\H4aWordpress;
 
+use Tobb10001\H4aIntegration\Updater;
 use Tobb10001\H4aWordpress\Persistence\WpdbAdapter;
 use Tobb10001\H4aWordpress\Util\WpNoticeManager;
 
@@ -13,8 +14,10 @@ class Plugin
     private WpdbAdapter $wpdbAdapter;
     private WpNoticeManager $noticeManager;
     private Settings $settings;
+    private Updater $updater;
 
     public const MANAGE_CAPABILITY = 'manage_h4ac';
+    public const UPDATE_HOOK = 'h4ac_update';
 
     /**
      * @param string $mainfile The Plugin file which contains the plugin header.
@@ -30,6 +33,7 @@ class Plugin
             $this->noticeManager,
             $this->mainfile,
         );
+        $this->updater = new Updater($this->wpdbAdapter);
     }
 
     /**
@@ -46,6 +50,19 @@ class Plugin
         // displaying notices
         $this->noticeManager->init();
         $this->settings->init();
+
+        // cronjob to update data
+        add_filter('cron_schedules', function ($schedules) {
+            $schedules['five_minutes'] = [
+                'interval' => 60 * 5,
+                'display' => 'Every five minutes',
+            ];
+            return $schedules;
+        });
+        add_action(self::UPDATE_HOOK, [$this->updater, 'update']);
+        if (!wp_next_scheduled(self::UPDATE_HOOK)) {
+            wp_schedule_event(time(), 'five_minutes', self::UPDATE_HOOK);
+        }
     }
 
     /** region Activation / Deactivation */
