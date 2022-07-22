@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+  wordpress:
+    image: wordpress:6-php8.0-apache
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wp_db_user
+      WORDPRESS_DB_PASSWORD: wp_db_pass
+      WORDPRESS_DB_NAME: wp_db_name
+      WORDPRESS_DEBUG: 1
+    volumes:
+      - wordpress:/var/www/html
+      - .:/var/www/html/wp-content/plugins/h4a-wordpress
+  db:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: wp_db_name
+      MYSQL_USER: wp_db_user
+      MYSQL_PASSWORD: wp_db_pass
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+    volumes:
+      - db:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - 8080:80
+
+volumes:
+  wordpress:
+  db:
